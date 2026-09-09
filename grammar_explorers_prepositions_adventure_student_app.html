@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammar Explorers: In, On, At Preposition Adventure!</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fredoka & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fredoka: ['Fredoka', 'sans-serif'],
+            sans: ['Inter', 'sans-serif']
+          },
+          colors: {
+            brandYellow: '#FFD166',
+            brandGreen: '#06D6A0',
+            brandBlue: '#118AB2',
+            brandPink: '#EF476F',
+            brandPurple: '#8338EC',
+            brandDark: '#073B4C'
+          },
+          animation: {
+            bounceSlow: 'bounce 2s infinite',
+            pulseSlow: 'pulse 3s infinite',
+            float: 'float 3s ease-in-out infinite'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Fredoka', cursive, 'Inter', sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+      min-height: 100vh;
+      user-select: none;
+    }
+    .card-shadow {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+    .bouncy-btn {
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .bouncy-btn:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+    .bouncy-btn:active {
+      transform: translateY(2px) scale(0.98);
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="text-brandDark flex flex-col min-h-screen">
+
+  <!-- ==================== CONFIGURATION ==================== -->
+  <script>
+    // TEACHERS: Paste your Google Apps Script Web App URL below to receive student performance data!
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF-88HRRKAX97uMvMQthkvVewPHp0dOA_iT1cbdMCixPMXT-mIZxCYGqa7IjuK44M/exec";
+  </script>
+
+  <!-- HEADER & NAVBAR -->
+  <header class="bg-white border-b-4 border-brandBlue/20 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-brandYellow rounded-2xl flex items-center justify-center text-brandDark font-black text-xl shadow-inner animate-bounceSlow">
+          📍
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold text-brandBlue tracking-wide">Grammar Explorers</h1>
+          <p class="text-xs text-gray-500 font-medium">Primary 1 • Prepositions Masterclass</p>
+        </div>
+      </div>
+
+      <!-- Controls & Status Widget -->
+      <div id="nav-widgets" class="hidden flex items-center gap-3 flex-wrap">
+        <!-- Student Avatar & Name Badge -->
+        <div class="flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+          <span id="nav-avatar" class="text-xl">🐯</span>
+          <span id="nav-student-info" class="text-sm font-semibold text-slate-700">Toby (P1-A)</span>
+        </div>
+
+        <!-- Star Counter -->
+        <div class="flex items-center space-x-1 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200 text-amber-600 font-bold text-sm">
+          <i class="fa-solid fa-star text-amber-400"></i>
+          <span id="nav-stars">0</span>
+        </div>
+
+        <!-- Audio TTS Toggle Switch -->
+        <button id="tts-toggle-btn" onclick="toggleAudioTTS()" class="flex items-center space-x-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 px-3 py-1.5 rounded-full text-xs font-bold transition">
+          <i id="tts-icon" class="fa-solid fa-volume-high text-emerald-600"></i>
+          <span id="tts-status-text">Read Aloud: ON</span>
+        </button>
+
+        <!-- Dynamic Difficulty Switcher -->
+        <div class="relative">
+          <select id="difficulty-selector" onchange="changeDifficulty(this.value)" class="bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-bold rounded-full px-3 py-1.5 focus:ring-2 focus:ring-indigo-400 outline-none cursor-pointer">
+            <option value="easy">🟢 Level 1: Easy (Helper Hints)</option>
+            <option value="medium" selected>🟡 Level 2: Medium (Standard)</option>
+            <option value="challenge">🔴 Level 3: Challenge (Timer Boost)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-5xl mx-auto px-4 py-6 flex-grow w-full">
+
+    <!-- SECTION 1: STUDENT LOGIN & ONBOARDING -->
+    <section id="screen-login" class="block">
+      <div class="max-w-md mx-auto bg-white rounded-3xl p-6 md:p-8 card-shadow border-4 border-brandYellow text-center relative overflow-hidden my-8">
+        <div class="absolute -top-10 -right-10 w-28 h-28 bg-brandYellow/20 rounded-full blur-xl"></div>
+        <div class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">Singapore Primary 1 English</div>
+        <h2 class="text-3xl font-extrabold text-brandDark mb-2">Welcome Explorer!</h2>
+        <p class="text-gray-600 text-sm mb-6">Master <span class="bg-brandYellow/40 px-1 rounded font-bold">IN</span>, <span class="bg-brandGreen/40 px-1 rounded font-bold">ON</span>, and <span class="bg-brandPink/40 px-1 rounded font-bold">AT</span> for locations, transport & time!</p>
+
+        <form onsubmit="handleStartApp(event)" class="space-y-4 text-left">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Your Full Name</label>
+            <input type="text" id="input-student-name" required placeholder="e.g. Samuel Tan" class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-brandBlue focus:ring-0 outline-none font-sans font-medium text-slate-800">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Type Your Class</label>
+            <input type="text" id="input-student-class" required placeholder="e.g. Primary 1-A or P1-A" class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-brandBlue focus:ring-0 outline-none font-sans font-medium text-slate-800">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Choose Your Learning Buddy</label>
+            <div class="grid grid-cols-4 gap-2">
+              <button type="button" onclick="selectAvatar('🐯')" class="avatar-option p-3 rounded-2xl border-2 border-brandYellow bg-amber-50 text-3xl text-center transition">🐯</button>
+              <button type="button" onclick="selectAvatar('🐒')" class="avatar-option p-3 rounded-2xl border-2 border-slate-200 hover:border-brandYellow text-3xl text-center transition">🐒</button>
+              <button type="button" onclick="selectAvatar('🐧')" class="avatar-option p-3 rounded-2xl border-2 border-slate-200 hover:border-brandYellow text-3xl text-center transition">🐧</button>
+              <button type="button" onclick="selectAvatar('🦁')" class="avatar-option p-3 rounded-2xl border-2 border-slate-200 hover:border-brandYellow text-3xl text-center transition">🦁</button>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-4 bg-brandGreen hover:bg-emerald-500 text-white font-extrabold text-lg rounded-2xl shadow-lg shadow-emerald-200 bouncy-btn transition flex items-center justify-center space-x-2">
+            <span>Start Adventure</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- SECTION 2: HUB SELECTION (LEARNING DECK VS PRACTICE GAME) -->
+    <section id="screen-hub" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 card-shadow border-2 border-sky-100 text-center">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-brandDark mb-1">Hello, <span id="hub-welcome-name">Explorer</span>! 👋</h2>
+        <p class="text-gray-600 text-sm">Where would you like to explore today?</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Interactive Learning Deck Button Card -->
+        <div onclick="openLearningDeck()" class="bg-gradient-to-br from-amber-100 to-orange-50 border-4 border-amber-300 rounded-3xl p-6 card-shadow cursor-pointer hover:border-amber-400 bouncy-btn flex flex-col justify-between relative overflow-hidden group">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-200/50 rounded-full blur-xl group-hover:scale-125 transition"></div>
+          <div>
+            <div class="w-14 h-14 bg-amber-400 text-white rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-md">
+              📖
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-200/80 px-2.5 py-1 rounded-full">Interactive Slides</span>
+            <h3 class="text-2xl font-black text-brandDark mt-2 mb-2">1. Interactive Learning Deck</h3>
+            <p class="text-slate-600 text-sm leading-relaxed mb-4">Learn general location vs. inside building, transport rules (bus, car, taxi, bike), and time rules!</p>
+          </div>
+          <button class="w-full py-3 bg-amber-400 hover:bg-amber-500 text-brandDark font-extrabold rounded-2xl shadow-md transition flex items-center justify-center space-x-2">
+            <span>Open Deck</span>
+            <i class="fa-solid fa-circle-play"></i>
+          </button>
+        </div>
+
+        <!-- Practice Game Button Card -->
+        <div onclick="openPracticeGame()" class="bg-gradient-to-br from-emerald-100 to-teal-50 border-4 border-emerald-300 rounded-3xl p-6 card-shadow cursor-pointer hover:border-emerald-400 bouncy-btn flex flex-col justify-between relative overflow-hidden group">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-emerald-200/50 rounded-full blur-xl group-hover:scale-125 transition"></div>
+          <div>
+            <div class="w-14 h-14 bg-brandGreen text-white rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-md">
+              🎮
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-200/80 px-2.5 py-1 rounded-full">Practice Mission</span>
+            <h3 class="text-2xl font-black text-brandDark mt-2 mb-2">2. Preposition Quest Game</h3>
+            <p class="text-slate-600 text-sm leading-relaxed mb-4">Test your skills with transport, general vs. inside location, and time questions!</p>
+          </div>
+          <button class="w-full py-3 bg-brandGreen hover:bg-emerald-500 text-white font-extrabold rounded-2xl shadow-md transition flex items-center justify-center space-x-2">
+            <span>Play Quest</span>
+            <i class="fa-solid fa-gamepad"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: INTERACTIVE LEARNING DECK -->
+    <section id="screen-deck" class="hidden space-y-4">
+      <!-- Deck Top Bar -->
+      <div class="flex items-center justify-between bg-white rounded-2xl p-4 card-shadow">
+        <button onclick="showScreen('screen-hub')" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl transition flex items-center space-x-1">
+          <i class="fa-solid fa-house"></i>
+          <span>Hub Menu</span>
+        </button>
+
+        <div class="text-sm font-extrabold text-brandBlue">
+          Slide <span id="deck-slide-num">1</span> of 6
+        </div>
+
+        <button onclick="readCurrentSlideTTS()" class="text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-2 rounded-xl transition flex items-center space-x-1">
+          <i class="fa-solid fa-volume-high"></i>
+          <span>Read Slide</span>
+        </button>
+      </div>
+
+      <!-- Slide Card Wrapper -->
+      <div class="bg-white rounded-3xl p-6 md:p-8 card-shadow border-4 border-brandBlue/30 min-h-[420px] flex flex-col justify-between relative overflow-hidden">
+
+        <!-- SLIDE CONTENT CONTAINER -->
+        <div id="deck-slide-content" class="space-y-6">
+          <!-- Slide JS renders dynamically here -->
+        </div>
+
+        <!-- Slide Navigation Controls -->
+        <div class="flex items-center justify-between pt-6 border-t border-slate-100 mt-6">
+          <button id="deck-btn-prev" onclick="changeSlide(-1)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-sm transition flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Previous</span>
+          </button>
+
+          <div id="deck-dots" class="flex space-x-2">
+            <!-- Dynamic dots -->
+          </div>
+
+          <button id="deck-btn-next" onclick="changeSlide(1)" class="px-6 py-2.5 bg-brandBlue hover:bg-sky-600 text-white rounded-2xl font-bold text-sm transition flex items-center space-x-2 shadow-md">
+            <span>Next Slide</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: PRACTICE GAME -->
+    <section id="screen-game" class="hidden space-y-4">
+      <!-- Game Top Status Bar -->
+      <div class="bg-white rounded-2xl p-4 card-shadow flex items-center justify-between flex-wrap gap-2">
+        <button onclick="showScreen('screen-hub')" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl transition">
+          <i class="fa-solid fa-house"></i> Hub
+        </button>
+
+        <div class="flex items-center space-x-4 text-xs font-bold">
+          <div class="bg-sky-50 text-sky-800 px-3 py-1.5 rounded-xl border border-sky-200">
+            Question <span id="game-q-index" class="text-brandBlue font-black text-sm">1</span> / <span id="game-q-total">10</span>
+          </div>
+
+          <!-- Timer Widget -->
+          <div id="game-timer-container" class="bg-amber-50 text-amber-800 px-3 py-1.5 rounded-xl border border-amber-200 flex items-center space-x-1">
+            <i class="fa-solid fa-clock text-amber-500 animate-spin"></i>
+            <span id="game-timer-text">15s</span>
+          </div>
+
+          <div class="bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-xl border border-emerald-200">
+            Score: <span id="game-score-text" class="font-black text-emerald-600">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Card Container -->
+      <div class="bg-white rounded-3xl p-6 md:p-8 card-shadow border-4 border-brandGreen/40 relative overflow-hidden min-h-[380px] flex flex-col justify-between">
+
+        <div>
+          <!-- Level Badge -->
+          <div class="flex justify-between items-center mb-4">
+            <span id="game-level-badge" class="bg-indigo-100 text-indigo-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+              🟡 Medium Level
+            </span>
+            <button onclick="readCurrentQuestionTTS()" class="text-xs font-bold text-slate-500 hover:text-brandBlue flex items-center space-x-1">
+              <i class="fa-solid fa-volume-high"></i>
+              <span>Listen</span>
+            </button>
+          </div>
+
+          <!-- Question Context & Visual Manipulative Area -->
+          <div id="game-visual-area" class="my-4 bg-sky-50/70 rounded-2xl p-4 border border-sky-100 flex flex-col items-center justify-center min-h-[120px]">
+            <!-- Visual diagram / image / icon generated here -->
+          </div>
+
+          <!-- Question Sentence Prompt -->
+          <div id="game-sentence-box" class="text-center text-xl md:text-2xl font-extrabold text-brandDark my-4 leading-relaxed">
+            <!-- Sentence with blank -->
+          </div>
+        </div>
+
+        <!-- Options Container -->
+        <div id="game-options-container" class="grid grid-cols-3 gap-3 my-4">
+          <!-- Options IN, ON, AT dynamically inserted -->
+        </div>
+
+        <!-- Socratic Feedback Container -->
+        <div id="game-feedback-box" class="hidden p-4 rounded-2xl text-center text-sm font-bold my-2 transition">
+          <!-- Feedback message -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 5: INTENTIONAL PAUSE / REFLECTION MODAL -->
+    <div id="modal-reflection" class="fixed inset-0 bg-brandDark/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full card-shadow border-4 border-brandYellow text-center space-y-4 animate-bounceSlow">
+        <div class="text-4xl">🧠</div>
+        <h3 class="text-2xl font-extrabold text-brandDark">Brain Rest & Check-In!</h3>
+        <p class="text-gray-600 text-sm">Great job so far! Quick transport memory check:</p>
+
+        <div id="reflection-prompt-box" class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-amber-900 font-bold text-sm">
+          "Why do we say <span class="bg-amber-200 px-1.5 py-0.5 rounded">ON a bus</span> but <span class="bg-amber-200 px-1.5 py-0.5 rounded">IN a taxi</span>?"
+        </div>
+
+        <div class="grid grid-cols-1 gap-2 text-left">
+          <button onclick="handleReflectionChoice(true)" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border-2 border-slate-200 rounded-2xl font-bold text-xs transition">
+            🚌 Bus is a larger public vehicle where you can stand/walk, while taxi is smaller and enclosed!
+          </button>
+          <button onclick="handleReflectionChoice(false)" class="p-3 bg-slate-50 hover:bg-rose-50 hover:border-rose-300 border-2 border-slate-200 rounded-2xl font-bold text-xs transition">
+            🚕 Taxi goes faster than a bus!
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: MISSION COMPLETION & RESULTS SCREEN -->
+    <section id="screen-summary" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 md:p-8 card-shadow border-4 border-brandYellow text-center space-y-6 max-w-2xl mx-auto">
+        <div class="inline-block text-6xl animate-bounce">🏆</div>
+        <h2 class="text-3xl font-extrabold text-brandDark">Mission Accomplished!</h2>
+        <p class="text-gray-600">You did a fantastic job exploring prepositions today!</p>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
+            <div class="text-2xl font-black text-amber-600" id="summary-score">0</div>
+            <div class="text-xs font-bold text-amber-800 uppercase">Total Score</div>
+          </div>
+          <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
+            <div class="text-2xl font-black text-emerald-600" id="summary-accuracy">0%</div>
+            <div class="text-xs font-bold text-emerald-800 uppercase">Accuracy</div>
+          </div>
+          <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200">
+            <div class="text-2xl font-black text-indigo-600" id="summary-badge">🌟</div>
+            <div class="text-xs font-bold text-indigo-800 uppercase">Mastery Badge</div>
+          </div>
+        </div>
+
+        <!-- Teacher Sync Status Indicator -->
+        <div id="sync-status-box" class="p-3 rounded-2xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-cloud-arrow-up text-brandBlue"></i>
+          <span id="sync-status-text">Saving results to Teacher Dashboard...</span>
+        </div>
+
+        <div class="flex gap-3">
+          <button onclick="showScreen('screen-hub')" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold rounded-2xl transition">
+            Main Hub
+          </button>
+          <button onclick="openPracticeGame()" class="flex-1 py-3 bg-brandGreen hover:bg-emerald-500 text-white font-extrabold rounded-2xl transition shadow-md">
+            Play Again 🔄
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 font-medium mt-auto">
+    Aligned with Singapore Ministry of Education (MOE) Primary 1 English Language Syllabus • Web Audio & Speech API Enabled
+  </footer>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    // --- APP STATE VARIABLES ---
+    let studentData = {
+      name: "",
+      class: "",
+      avatar: "🐯",
+      stars: 0
+    };
+
+    let audioTTSEnabled = true;
+    let currentDifficulty = "medium"; // easy, medium, challenge
+
+    // Deck state
+    let currentSlideIndex = 0;
+
+    // Practice Game state
+    let currentGameQuestions = [];
+    let currentQIndex = 0;
+    let score = 0;
+    let totalAnswered = 0;
+    let correctCount = 0;
+    let commonMistakes = [];
+    let timerInterval = null;
+    let timeLeft = 15;
+
+    // --- WEB AUDIO API SOUND EFFECTS SYNTHESIZER ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSoundEffect(type) {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'correct') {
+          // Celebratory fanfare chime
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+          osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        } else if (type === 'incorrect') {
+          // Gentle retry buzz
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(180, now + 0.2);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === 'fanfare') {
+          // Win sound
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.setValueAtTime(554.37, now + 0.15);
+          osc.frequency.setValueAtTime(659.25, now + 0.3);
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+          osc.start(now);
+          osc.stop(now + 0.6);
+        }
+      } catch(e) {
+        console.log("Audio FX error:", e);
+      }
+    }
+
+    // --- WEB SPEECH API TEXT-TO-SPEECH (TTS) WITH BLANK REPLACEMENT ---
+    function speakText(text) {
+      if (!audioTTSEnabled) return; // Silent if toggled OFF
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop ongoing speech
+
+        // Replace underscores with "blank" so it sounds natural to Primary 1 learners
+        let processedText = text.replace(/_+/g, " blank ");
+
+        const utterance = new SpeechSynthesisUtterance(processedText);
+        utterance.rate = 0.85; // Slightly slower for P1 young learners
+        utterance.pitch = 1.1; // Friendly tone
+        utterance.lang = 'en-SG'; // Singapore / standard English
+
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleAudioTTS() {
+      audioTTSEnabled = !audioTTSEnabled;
+      const statusText = document.getElementById('tts-status-text');
+      const icon = document.getElementById('tts-icon');
+
+      if (audioTTSEnabled) {
+        statusText.innerText = "Read Aloud: ON";
+        icon.className = "fa-solid fa-volume-high text-emerald-600";
+        speakText("Read aloud is enabled!");
+      } else {
+        statusText.innerText = "Read Aloud: OFF";
+        icon.className = "fa-solid fa-volume-xmark text-slate-400";
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      }
+      playSoundEffect('click');
+    }
+
+    // --- SCREEN NAVIGATION ---
+    function showScreen(screenId) {
+      const screens = ['screen-login', 'screen-hub', 'screen-deck', 'screen-game', 'screen-summary'];
+      screens.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+
+      const target = document.getElementById(screenId);
+      if (target) target.classList.remove('hidden');
+
+      if (screenId !== 'screen-login') {
+        document.getElementById('nav-widgets').classList.remove('hidden');
+      } else {
+        document.getElementById('nav-widgets').classList.add('hidden');
+      }
+    }
+
+    function selectAvatar(emoji) {
+      studentData.avatar = emoji;
+      document.querySelectorAll('.avatar-option').forEach(btn => {
+        btn.classList.remove('border-brandYellow', 'bg-amber-50');
+        if (btn.innerText.includes(emoji)) {
+          btn.classList.add('border-brandYellow', 'bg-amber-50');
+        }
+      });
+      playSoundEffect('click');
+    }
+
+    function handleStartApp(e) {
+      e.preventDefault();
+      studentData.name = document.getElementById('input-student-name').value.trim();
+      studentData.class = document.getElementById('input-student-class').value.trim();
+
+      document.getElementById('nav-avatar').innerText = studentData.avatar;
+      document.getElementById('nav-student-info').innerText = `${studentData.name} (${studentData.class})`;
+      document.getElementById('hub-welcome-name').innerText = studentData.name;
+
+      playSoundEffect('click');
+      speakText(`Welcome ${studentData.name}! Let's learn prepositions!`);
+      showScreen('screen-hub');
+    }
+
+    // --- INTERACTIVE LEARNING DECK DATA & FUNCTIONS ---
+    const slideData = [
+      {
+        title: "What are Prepositions?",
+        concept: "Where and When",
+        contentHtml: `
+          <div class="text-center space-y-4">
+            <h3 class="text-2xl font-black text-brandBlue">Prepositions tell us WHERE or WHEN!</h3>
+            <p class="text-slate-700 font-medium">In Primary 1, we learn three super words:</p>
+            <div class="flex justify-center items-center gap-4 my-6">
+              <div class="bg-amber-100 border-2 border-amber-300 p-4 rounded-2xl text-center shadow-sm w-28 animate-float">
+                <span class="text-2xl font-black text-amber-700">IN</span>
+              </div>
+              <div class="bg-emerald-100 border-2 border-emerald-300 p-4 rounded-2xl text-center shadow-sm w-28 animate-float" style="animation-delay: 0.5s;">
+                <span class="text-2xl font-black text-emerald-700">ON</span>
+              </div>
+              <div class="bg-rose-100 border-2 border-rose-300 p-4 rounded-2xl text-center shadow-sm w-28 animate-float" style="animation-delay: 1s;">
+                <span class="text-2xl font-black text-rose-700">AT</span>
+              </div>
+            </div>
+            <p class="text-sm text-slate-500">Tap Next to see the important rules!</p>
+          </div>
+        `,
+        speech: "Prepositions tell us where things are, or when things happen. Let's learn IN, ON, and AT!"
+      },
+      {
+        title: "General Location vs. Inside a Building",
+        concept: "AT vs. IN for Locations",
+        contentHtml: `
+          <div class="space-y-4">
+            <h3 class="text-xl font-black text-brandDark text-center">Where is Mary? 🏫</h3>
+            <div class="grid md:grid-cols-2 gap-4 my-2">
+              <div onclick="speakText('Use AT to describe general location! Mary is at the school.')" class="bg-rose-50 p-4 rounded-2xl border-2 border-rose-200 text-center cursor-pointer hover:bg-rose-100 transition">
+                <div class="text-4xl mb-2">📍🏫</div>
+                <div class="font-black text-rose-700 text-lg">General Location = AT</div>
+                <div class="text-xs text-slate-600 mt-1">Answers "Where are you at?"</div>
+                <div class="text-sm font-bold text-rose-900 mt-2 bg-white/70 p-2 rounded-xl">"Mary is <u class="text-rose-600 font-black">at</u> the school."</div>
+              </div>
+
+              <div onclick="speakText('Use IN to emphasize being inside the building or area! Mary is in the school.')" class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 text-center cursor-pointer hover:bg-amber-100 transition">
+                <div class="text-4xl mb-2">🏢👧</div>
+                <div class="font-black text-amber-700 text-lg">Inside Building = IN</div>
+                <div class="text-xs text-slate-600 mt-1">Emphasizes being inside</div>
+                <div class="text-sm font-bold text-amber-900 mt-2 bg-white/70 p-2 rounded-xl">"Mary is <u class="text-amber-600 font-black">in</u> the school."</div>
+              </div>
+            </div>
+            <p class="text-xs text-center text-slate-400">💡 Tap any box above to hear the rule!</p>
+          </div>
+        `,
+        speech: "If you describe general location, use AT, like Mary is at the school. But if you emphasize being inside the building, use IN, like Mary is in the school!"
+      },
+      {
+        title: "Prepositions for Vehicles & Transport 🚌🚕",
+        concept: "IN vs. ON for Transport",
+        contentHtml: `
+          <div class="space-y-4">
+            <h3 class="text-xl font-black text-brandDark text-center">Taking Vehicles & Transport! 🚗🚲</h3>
+            <div class="grid md:grid-cols-2 gap-4 my-2">
+              <div onclick="speakText('Use IN for smaller, personal, enclosed vehicles where you must sit! In a car, in a taxi.')" class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 text-center cursor-pointer hover:bg-amber-100 transition">
+                <div class="text-4xl mb-2">🚗 🚕</div>
+                <div class="font-black text-amber-700 text-lg">Small / Enclosed = IN</div>
+                <div class="text-xs text-slate-600 mt-1">Personal vehicles where you sit</div>
+                <div class="text-sm font-bold text-amber-900 mt-2 bg-white/70 p-2 rounded-xl">"in a car"<br>"in a taxi"</div>
+              </div>
+
+              <div onclick="speakText('Use ON for larger, public, or open vehicles where you can stand, walk, or sit on top! On a bus, on a train, on a bicycle.')" class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 text-center cursor-pointer hover:bg-emerald-100 transition">
+                <div class="text-4xl mb-2">🚌 🚆 🚲</div>
+                <div class="font-black text-emerald-700 text-lg">Larger / Public / Open = ON</div>
+                <div class="text-xs text-slate-600 mt-1">Vehicles you can walk/stand on</div>
+                <div class="text-sm font-bold text-emerald-900 mt-2 bg-white/70 p-2 rounded-xl">"on a bus"<br>"on a train"<br>"on a bicycle"</div>
+              </div>
+            </div>
+            <p class="text-xs text-center text-slate-400">💡 Tap any box above to hear the rule!</p>
+          </div>
+        `,
+        speech: "Use IN for smaller, personal vehicles where you sit, like in a car or in a taxi. Use ON for larger public vehicles or open ones where you can stand or walk, like on a bus, on a train, or on a bicycle!"
+      },
+      {
+        title: "Prepositions of Time (When things happen)",
+        concept: "IN, ON, AT for Time",
+        contentHtml: `
+          <div class="space-y-4">
+            <h3 class="text-xl font-black text-brandDark text-center">When does it happen? ⏰</h3>
+            <div class="grid md:grid-cols-3 gap-4 my-2">
+              <div onclick="speakText('IN is used for parts of the day and months! In the morning, in July.')" class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-200 text-center cursor-pointer hover:bg-sky-100 transition">
+                <div class="text-3xl mb-1">🌅 🗓️</div>
+                <div class="font-black text-sky-700 text-lg">IN</div>
+                <div class="text-xs text-slate-600">Parts of day & months</div>
+                <div class="text-xs font-bold text-sky-900 mt-2">"in the morning"<br>"in July"</div>
+              </div>
+              <div onclick="speakText('ON is used for days of the week and exact dates! On Monday, on 5th May.')" class="bg-purple-50 p-4 rounded-2xl border-2 border-purple-200 text-center cursor-pointer hover:bg-purple-100 transition">
+                <div class="text-3xl mb-1">📅 🎈</div>
+                <div class="font-black text-purple-700 text-lg">ON</div>
+                <div class="text-xs text-slate-600">Days and dates</div>
+                <div class="text-xs font-bold text-purple-900 mt-2">"on Monday"<br>"on my birthday"</div>
+              </div>
+              <div onclick="speakText('AT is used for clock times and special night times! At 7 o clock, at night.')" class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 text-center cursor-pointer hover:bg-amber-100 transition">
+                <div class="text-3xl mb-1">⏰ 🌙</div>
+                <div class="font-black text-amber-700 text-lg">AT</div>
+                <div class="text-xs text-slate-600">Clock time & night</div>
+                <div class="text-xs font-bold text-amber-900 mt-2">"at 7 o'clock"<br>"at night"</div>
+              </div>
+            </div>
+            <p class="text-xs text-center text-slate-400">💡 Tap any box above to hear it!</p>
+          </div>
+        `,
+        speech: "For time: Use IN for morning, afternoon, and months. Use ON for days like Monday or birthdays. Use AT for clock times like 7 o'clock and at night!"
+      },
+      {
+        title: "Interactive Diagram Tool: Visual Preposition Helper",
+        concept: "Interactive Visualizer",
+        contentHtml: `
+          <div class="text-center space-y-4">
+            <h3 class="text-xl font-black text-brandBlue">Interactive Visualizer: Transport & Places</h3>
+            <div class="flex justify-center flex-wrap gap-2 mb-2">
+              <button onclick="updateVisualizer('car')" class="px-3 py-1.5 bg-amber-200 hover:bg-amber-300 rounded-xl font-bold text-xs text-amber-900 transition">In a Taxi 🚕</button>
+              <button onclick="updateVisualizer('bus')" class="px-3 py-1.5 bg-emerald-200 hover:bg-emerald-300 rounded-xl font-bold text-xs text-emerald-900 transition">On a Bus 🚌</button>
+              <button onclick="updateVisualizer('general')" class="px-3 py-1.5 bg-rose-200 hover:bg-rose-300 rounded-xl font-bold text-xs text-rose-900 transition">At School 📍</button>
+              <button onclick="updateVisualizer('inside')" class="px-3 py-1.5 bg-indigo-200 hover:bg-indigo-300 rounded-xl font-bold text-xs text-indigo-900 transition">In the School 🏢</button>
+            </div>
+
+            <div id="visualizer-display" class="bg-slate-100 rounded-2xl p-6 border-2 border-dashed border-slate-300 min-h-[160px] flex flex-col items-center justify-center transition">
+              <div class="text-5xl animate-bounce">🚕🐯</div>
+              <p class="text-base font-black text-slate-800 mt-3">Toby is <span class="text-amber-600 bg-amber-100 px-2 py-1 rounded">IN</span> a taxi (enclosed vehicle).</p>
+            </div>
+          </div>
+        `,
+        speech: "Try clicking the buttons to change Toby's location and transport!"
+      },
+      {
+        title: "Quick Summary & Memory Rule",
+        concept: "Mastery Checklist",
+        contentHtml: `
+          <div class="space-y-4 text-center">
+            <h3 class="text-2xl font-black text-brandGreen">You are ready for Preposition Quest! 🎉</h3>
+            <div class="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-2xl text-left max-w-md mx-auto space-y-2 text-xs md:text-sm">
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-600">✅</span>
+                <span><b>AT</b> (General Location): at school, at the park</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-600">✅</span>
+                <span><b>IN</b> (Inside Building): in the school, in the library</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-600">✅</span>
+                <span><b>IN</b> (Small Vehicles): in a car, in a taxi</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-600">✅</span>
+                <span><b>ON</b> (Large/Open Transport): on a bus, on a train, on a bicycle</span>
+              </div>
+            </div>
+            <button onclick="openPracticeGame()" class="py-3 px-8 bg-brandGreen hover:bg-emerald-500 text-white font-extrabold text-base rounded-2xl shadow-lg transition bouncy-btn inline-flex items-center space-x-2">
+              <span>Start Practice Quest Now!</span>
+              <i class="fa-solid fa-gamepad"></i>
+            </button>
+          </div>
+        `,
+        speech: "Remember the summary rules! Now click Start Practice Quest to begin the game!"
+      }
+    ];
+
+    function openLearningDeck() {
+      currentSlideIndex = 0;
+      renderSlide();
+      showScreen('screen-deck');
+      playSoundEffect('click');
+    }
+
+    function renderSlide() {
+      const slide = slideData[currentSlideIndex];
+      document.getElementById('deck-slide-num').innerText = currentSlideIndex + 1;
+
+      const contentBox = document.getElementById('deck-slide-content');
+      contentBox.innerHTML = `
+        <div class="inline-block bg-sky-100 text-sky-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+          ${slide.concept}
+        </div>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-brandDark">${slide.title}</h2>
+        ${slide.contentHtml}
+      `;
+
+      // Dots
+      const dotsContainer = document.getElementById('deck-dots');
+      dotsContainer.innerHTML = slideData.map((_, idx) => `
+        <div class="w-3 h-3 rounded-full transition-all ${idx === currentSlideIndex ? 'bg-brandBlue w-6' : 'bg-slate-200'}"></div>
+      `).join('');
+
+      // Buttons active state
+      document.getElementById('deck-btn-prev').disabled = (currentSlideIndex === 0);
+      document.getElementById('deck-btn-prev').classList.toggle('opacity-50', currentSlideIndex === 0);
+
+      speakText(slide.speech);
+    }
+
+    function changeSlide(dir) {
+      playSoundEffect('click');
+      currentSlideIndex += dir;
+      if (currentSlideIndex < 0) currentSlideIndex = 0;
+      if (currentSlideIndex >= slideData.length) currentSlideIndex = slideData.length - 1;
+      renderSlide();
+    }
+
+    function readCurrentSlideTTS() {
+      speakText(slideData[currentSlideIndex].speech);
+    }
+
+    function updateVisualizer(mode) {
+      playSoundEffect('click');
+      const display = document.getElementById('visualizer-display');
+      if (mode === 'car') {
+        display.innerHTML = `
+          <div class="text-5xl animate-bounce">🚕🐯</div>
+          <p class="text-base font-black text-slate-800 mt-3">Toby is <span class="text-amber-600 bg-amber-100 px-2 py-1 rounded">IN</span> a taxi (enclosed small vehicle).</p>
+        `;
+        speakText("Toby is in a taxi.");
+      } else if (mode === 'bus') {
+        display.innerHTML = `
+          <div class="text-5xl animate-bounce">🚌🐯</div>
+          <p class="text-base font-black text-slate-800 mt-3">Toby is <span class="text-emerald-600 bg-emerald-100 px-2 py-1 rounded">ON</span> a bus (large public transport).</p>
+        `;
+        speakText("Toby is on a bus.");
+      } else if (mode === 'general') {
+        display.innerHTML = `
+          <div class="text-5xl animate-bounce">📍🏫</div>
+          <p class="text-base font-black text-slate-800 mt-3">Mary is <span class="text-rose-600 bg-rose-100 px-2 py-1 rounded">AT</span> the school (general location).</p>
+        `;
+        speakText("Mary is at the school.");
+      } else if (mode === 'inside') {
+        display.innerHTML = `
+          <div class="text-5xl animate-bounce">🏢👧</div>
+          <p class="text-base font-black text-slate-800 mt-3">Mary is <span class="text-indigo-600 bg-indigo-100 px-2 py-1 rounded">IN</span> the school building (emphasizing inside).</p>
+        `;
+        speakText("Mary is in the school.");
+      }
+    }
+
+    // --- PRACTICE GAME QUESTION BANK (STRICTLY CATEGORIZED BY DIFFICULTY TIER) ---
+    const questionBank = [
+      // ==================== EASY LEVEL (LEVEL 1: SIMPLE CONTEXT, DIRECT CUES & HINTS) ====================
+      {
+        id: 101,
+        tier: "easy",
+        sentence: "Uncle Tan is driving home _____ a car.",
+        correct: "in",
+        visual: "🚗",
+        hint: "A car is a small enclosed vehicle where you sit inside. We use 'in'!",
+        type: "transport"
+      },
+      {
+        id: 102,
+        tier: "easy",
+        sentence: "The children are riding _____ a big yellow bus.",
+        correct: "on",
+        visual: "🚌",
+        hint: "A bus is large public transport where you can stand or walk on. We use 'on'!",
+        type: "transport"
+      },
+      {
+        id: 103,
+        tier: "easy",
+        sentence: "Mary is waiting _____ the school door.",
+        correct: "at",
+        visual: "🏫📍",
+        hint: "To show a specific spot or general place, we use 'at'!",
+        type: "location_general"
+      },
+      {
+        id: 104,
+        tier: "easy",
+        sentence: "We go to school _____ 7 o'clock.",
+        correct: "at",
+        visual: "⏰🏫",
+        hint: "For exact clock times like 7 o'clock, we always use 'at'!",
+        type: "time"
+      },
+      {
+        id: 105,
+        tier: "easy",
+        sentence: "Put the storybooks _____ the school bag.",
+        correct: "in",
+        visual: "🎒📚",
+        hint: "When something is inside a container or bag, we use 'in'!",
+        type: "location_inside"
+      },
+      {
+        id: 106,
+        tier: "easy",
+        sentence: "The cat is sleeping _____ the mat.",
+        correct: "on",
+        visual: "🐱🛋️",
+        hint: "When something touches the top surface of an item, we use 'on'!",
+        type: "location_surface"
+      },
+
+      // ==================== MEDIUM LEVEL (LEVEL 2: STANDARD PRIMARY 1 MOE CURRICULUM) ====================
+      {
+        id: 201,
+        tier: "medium",
+        sentence: "We took a ride _____ a taxi to go to Changi Airport.",
+        correct: "in",
+        visual: "🚕✈️",
+        hint: "A taxi is a small personal vehicle where you sit enclosed. We use 'in'!",
+        type: "transport"
+      },
+      {
+        id: 202,
+        tier: "medium",
+        sentence: "Ahmad is riding _____ a bicycle around the neighborhood park.",
+        correct: "on",
+        visual: "🚲🌳",
+        hint: "For open vehicles where you sit on top like a bicycle, we use 'on'!",
+        type: "transport"
+      },
+      {
+        id: 203,
+        tier: "medium",
+        sentence: "To stay dry during the heavy rain, Mary waited _____ the school hall.",
+        correct: "in",
+        visual: "🌧️🏢",
+        hint: "When emphasizing being inside a building or room to shelter, we use 'in'!",
+        type: "location_inside"
+      },
+      {
+        id: 204,
+        tier: "medium",
+        sentence: "Our class English lesson is _____ Monday morning.",
+        correct: "on",
+        visual: "📅✍️",
+        hint: "For days of the week (Monday, Tuesday), we always use 'on'!",
+        type: "time"
+      },
+      {
+        id: 205,
+        tier: "medium",
+        sentence: "The students are standing _____ the bus stop.",
+        correct: "at",
+        visual: "🚏👦",
+        hint: "A bus stop is a specific location point, so we say 'at the bus stop'!",
+        type: "location_general"
+      },
+
+      // ==================== CHALLENGE LEVEL (LEVEL 3: ADVANCED PREPOSITION CONTEXTS & TIMERS) ====================
+      {
+        id: 301,
+        tier: "challenge",
+        sentence: "We traveled across Singapore _____ an MRT train during peak hour.",
+        correct: "on",
+        visual: "🚆⏱️",
+        hint: "Train is large public transport where passengers stand and move around. Use 'on'!",
+        type: "transport_complex"
+      },
+      {
+        id: 302,
+        tier: "challenge",
+        sentence: "Grandfather enjoys looking at the bright stars _____ night.",
+        correct: "at",
+        visual: "🌙⭐",
+        hint: "Be careful! While we say 'in the morning', night is special: we say 'at night'!",
+        type: "time_special"
+      },
+      {
+        id: 303,
+        tier: "challenge",
+        sentence: "My aunt will arrive in Singapore _____ the 15th of August.",
+        correct: "on",
+        visual: "📅🇸🇬",
+        hint: "Specific calendar dates (like 15th August) always take 'on'!",
+        type: "time_date"
+      },
+      {
+        id: 304,
+        tier: "challenge",
+        sentence: "While traveling _____ a ferry to Sentosa Island, we saw sea birds!",
+        correct: "on",
+        visual: "⛴️🏝️",
+        hint: "Ferries and ships are large water transport where you walk on deck. Use 'on'!",
+        type: "transport_complex"
+      }
+    ];
+
+    function changeDifficulty(val) {
+      currentDifficulty = val;
+      playSoundEffect('click');
+      const badge = document.getElementById('game-level-badge');
+      if (val === 'easy') {
+        badge.innerText = "🟢 Level 1: Easy";
+        badge.className = "bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider";
+      } else if (val === 'medium') {
+        badge.innerText = "🟡 Level 2: Medium";
+        badge.className = "bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider";
+      } else {
+        badge.innerText = "🔴 Level 3: Challenge";
+        badge.className = "bg-rose-100 text-rose-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider";
+      }
+
+      // If currently playing, reload questions for new level
+      if (!document.getElementById('screen-game').classList.contains('hidden')) {
+        openPracticeGame();
+      }
+    }
+
+    function openPracticeGame() {
+      // STRICT FILTERING: Questions are filtered strictly by the selected difficulty tier
+      currentGameQuestions = questionBank.filter(q => q.tier === currentDifficulty);
+
+      // Fallback in case tier has no items
+      if (currentGameQuestions.length === 0) {
+        currentGameQuestions = questionBank.filter(q => q.tier === 'medium');
+      }
+
+      // Shuffle order for variety each session
+      currentGameQuestions.sort(() => Math.random() - 0.5);
+
+      currentQIndex = 0;
+      score = 0;
+      totalAnswered = 0;
+      correctCount = 0;
+      commonMistakes = [];
+
+      document.getElementById('game-score-text').innerText = score;
+      document.getElementById('game-q-total').innerText = currentGameQuestions.length;
+
+      showScreen('screen-game');
+      renderQuestion();
+      playSoundEffect('click');
+    }
+
+    function renderQuestion() {
+      if (currentQIndex >= currentGameQuestions.length) {
+        finishGame();
+        return;
+      }
+
+      const q = currentGameQuestions[currentQIndex];
+      document.getElementById('game-q-index').innerText = currentQIndex + 1;
+
+      // Render Visual Box
+      const visualArea = document.getElementById('game-visual-area');
+      visualArea.innerHTML = `
+        <div class="text-5xl animate-bounce mb-2">${q.visual}</div>
+        <div class="text-xs font-bold text-slate-500 bg-white px-3 py-1 rounded-full shadow-sm">
+          Clue Context: ${q.type.replace('_', ' ').toUpperCase()}
+        </div>
+      `;
+
+      // Render Sentence Prompt with blank space
+      const sentenceBox = document.getElementById('game-sentence-box');
+      const formattedSentence = q.sentence.replace('_____', `<span class="inline-block border-b-4 border-brandBlue text-brandBlue px-4 py-1 mx-1 font-black bg-sky-100/60 rounded-lg animate-pulse">?</span>`);
+      sentenceBox.innerHTML = formattedSentence;
+
+      // Render Options (in, on, at)
+      const optionsContainer = document.getElementById('game-options-container');
+      const options = ['in', 'on', 'at'];
+      optionsContainer.innerHTML = options.map(opt => `
+        <button onclick="handleAnswer('${opt}')" class="py-4 bg-slate-50 hover:bg-amber-100 hover:border-amber-400 border-2 border-slate-200 rounded-2xl font-black text-xl text-brandDark shadow-sm bouncy-btn transition uppercase">
+          ${opt}
+        </button>
+      `).join('');
+
+      // Reset Feedback
+      const feedbackBox = document.getElementById('game-feedback-box');
+      feedbackBox.className = "hidden p-4 rounded-2xl text-center text-sm font-bold my-2 transition";
+      feedbackBox.innerText = "";
+
+      // Timer reset based on difficulty
+      clearInterval(timerInterval);
+      if (currentDifficulty === 'easy') timeLeft = 20;
+      else if (currentDifficulty === 'medium') timeLeft = 15;
+      else timeLeft = 10;
+
+      document.getElementById('game-timer-text').innerText = `${timeLeft}s`;
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('game-timer-text').innerText = `${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleAnswer('timeout');
+        }
+      }, 1000);
+
+      // TTS Speech
+      speakText(q.sentence);
+    }
+
+    function readCurrentQuestionTTS() {
+      const q = currentGameQuestions[currentQIndex];
+      if (q) speakText(q.sentence);
+    }
+
+    function handleAnswer(selectedOption) {
+      clearInterval(timerInterval);
+      const q = currentGameQuestions[currentQIndex];
+      const feedbackBox = document.getElementById('game-feedback-box');
+      feedbackBox.classList.remove('hidden');
+
+      totalAnswered++;
+
+      if (selectedOption === q.correct) {
+        // Correct Answer!
+        correctCount++;
+        score += (currentDifficulty === 'challenge' ? 150 : 100);
+        studentData.stars += 1;
+
+        document.getElementById('game-score-text').innerText = score;
+        document.getElementById('nav-stars').innerText = studentData.stars;
+
+        playSoundEffect('correct');
+        feedbackBox.className = "p-4 rounded-2xl text-center text-sm font-extrabold bg-emerald-100 border-2 border-emerald-300 text-emerald-900 my-2 shadow-sm animate-bounce";
+        feedbackBox.innerHTML = `🎉 Superb! "${q.correct.toUpperCase()}" is correct!`;
+
+        speakText(`Awesome! ${q.sentence.replace('_____', q.correct)}`);
+
+        setTimeout(() => {
+          currentQIndex++;
+          // Trigger reflection modal midway
+          if (currentQIndex === Math.floor(currentGameQuestions.length / 2)) {
+            document.getElementById('modal-reflection').classList.remove('hidden');
+          } else {
+            renderQuestion();
+          }
+        }, 1500);
+
+      } else {
+        // Incorrect / Timeout - Socratic Guidance Feedback
+        playSoundEffect('incorrect');
+
+        const mistakeEntry = `Tried '${selectedOption}' instead of '${q.correct}' in '${q.sentence}'`;
+        commonMistakes.push(mistakeEntry);
+
+        feedbackBox.className = "p-4 rounded-2xl text-center text-sm font-bold bg-amber-100 border-2 border-amber-300 text-amber-900 my-2 shadow-sm";
+        feedbackBox.innerHTML = `
+          <div class="font-extrabold text-amber-900 mb-1">🤔 Almost there! Let's think together:</div>
+          <p class="text-xs font-semibold text-slate-700">${q.hint}</p>
+        `;
+
+        speakText(`Not quite! ${q.hint}`);
+
+        setTimeout(() => {
+          currentQIndex++;
+          renderQuestion();
+        }, 3200);
+      }
+    }
+
+    function handleReflectionChoice(isCorrect) {
+      document.getElementById('modal-reflection').classList.add('hidden');
+      if (isCorrect) {
+        playSoundEffect('correct');
+        score += 50;
+        studentData.stars += 1;
+        document.getElementById('game-score-text').innerText = score;
+        document.getElementById('nav-stars').innerText = studentData.stars;
+      } else {
+        playSoundEffect('incorrect');
+      }
+      renderQuestion();
+    }
+
+    // --- SUMMARY & GOOGLE APPS SCRIPT BACKEND SYNC ---
+    function finishGame() {
+      showScreen('screen-summary');
+      playSoundEffect('fanfare');
+
+      const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+
+      document.getElementById('summary-score').innerText = score;
+      document.getElementById('summary-accuracy').innerText = `${accuracy}%`;
+
+      let badge = "🌟 Bronze Explorer";
+      if (accuracy >= 80) badge = "🏆 Preposition Master!";
+      else if (accuracy >= 60) badge = "🥇 Silver Adventurer";
+
+      document.getElementById('summary-badge').innerText = badge;
+
+      speakText(`Congratulations ${studentData.name}! You finished with a score of ${score}!`);
+
+      submitToTeacherBackend(accuracy);
+    }
+
+    function submitToTeacherBackend(accuracy) {
+      const syncText = document.getElementById('sync-status-text');
+      const syncBox = document.getElementById('sync-status-box');
+
+      if (!GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL.includes("PASTE_YOUR_WEB_APP_URL")) {
+        syncText.innerText = "Teacher Backend URL not linked. Results saved locally.";
+        syncBox.className = "p-3 rounded-2xl bg-amber-100 text-amber-800 text-xs font-bold flex items-center justify-center space-x-2";
+        return;
+      }
+
+      syncText.innerText = "Syncing results with Teacher Dashboard...";
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        studentName: studentData.name,
+        class: studentData.class,
+        score: score,
+        level: currentDifficulty,
+        accuracy: accuracy,
+        commonMistakes: commonMistakes.length > 0 ? JSON.stringify(commonMistakes) : "None"
+      };
+
+      fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        syncText.innerText = "Successfully saved to Teacher Dashboard!";
+        syncBox.className = "p-3 rounded-2xl bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center space-x-2";
+      })
+      .catch(err => {
+        console.error("Backend error:", err);
+        syncText.innerText = "Sync failed. Saved locally.";
+      });
+    }
+  </script>
+
+</body>
+</html>
